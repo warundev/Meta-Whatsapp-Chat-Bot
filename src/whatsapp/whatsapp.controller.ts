@@ -50,7 +50,7 @@ handlewebhook(@Req() req: Request, @Res() res: Response) {
     console.log(`💬 Message: ${messageBody}`);
     console.log('=============================');
 
-    this.sendmessage(phoneNumber, "hello from nestjs");
+    this.sendmessage(phoneNumber, "hello from Meta Chat Bot!");
   }
 
   res.sendStatus(200);
