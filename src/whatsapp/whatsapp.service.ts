@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { AppConfig } from '../config/AppConfig';
+import { OpenaiService } from '../openai/openai.service';
 
 @Injectable()
 export class WhatsappService {
+
+    constructor(private openaiService: OpenaiService) {}
+
+    async handleusermessage(number: string, message: string){
+      const reply = await this.openaiService.generateResponse(message);
+      this.sendMessage(number, reply);
+    }
   async sendMessage(to: string, message: string): Promise<void> {
     const data = {
       messaging_product: 'whatsapp',
@@ -18,10 +27,10 @@ export class WhatsappService {
     const config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `https://graph.facebook.com/${process.env.WHATSAPP_API_VERSION}/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+      url: `https://graph.facebook.com/${AppConfig.WHATSAPP_API_VERSION}/${AppConfig.WHATSAPP_PHONE_NUMBER_ID}/messages`,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.WHATSAPP_API_KEY}`,
+        Authorization: `Bearer ${AppConfig.WHATSAPP_API_KEY}`,
       },
       data: data,
     };

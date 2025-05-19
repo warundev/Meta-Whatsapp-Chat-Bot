@@ -1,10 +1,14 @@
 import { Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { OpenaiService } from '../openai/openai.service';
 import { WhatsappService } from './whatsapp.service';
 
 @Controller('whatsapp')
 export class WhatsappController {
-  constructor(private whatsappService: WhatsappService) {}
+  constructor(
+    private whatsappService: WhatsappService,
+    private openaiService: OpenaiService,
+  ) {}
 
   @Get('test')
   test() {
@@ -53,7 +57,9 @@ export class WhatsappController {
       console.log(`💬 Message: ${messageBody}`);
       console.log('=============================');
 
-      await this.whatsappService.sendMessage(phoneNumber, "hello from Meta Chat Bot!");
+      // Generate OpenAI response
+      const aiResponse = await this.openaiService.generateChatCompletion(messageBody || '');
+      await this.whatsappService.handleusermessage(phoneNumber, messageBody);
     }
 
     res.sendStatus(200);
