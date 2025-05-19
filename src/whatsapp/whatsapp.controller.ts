@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 @Controller('whatsapp')
@@ -22,7 +22,16 @@ export class WhatsappController {
         res.sendStatus(403);
       }
     } else {
-      res.sendStatus(400); // Optional: Bad Request if required params missing
+      res.sendStatus(400);
     }
+  }
+
+  @Post('webhook')
+  handlewebhook(@Req() req: Request, @Res() res: Response) {
+    console.log('===== INCOMING WHATSAPP WEBHOOK =====');
+    console.log('Headers:', req.headers);
+    console.log('Body:', JSON.stringify(req.body, null, 2));
+    console.log('======================================');
+    res.sendStatus(200);
   }
 }
